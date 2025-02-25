@@ -103,11 +103,18 @@ private:
     imu_queue.push_back(imu_msg);
   }
 
-  void cloud_callback(const pcl::PointCloud<PointT>& src_cloud_r) {
-    pcl::PointCloud<PointT>::ConstPtr src_cloud = src_cloud_r.makeShared();
-    if(src_cloud->empty()) {
+  void cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg) {
+    pcl::PointCloud<PointT>::Ptr src_cloud_r(new pcl::PointCloud<PointT>());
+    
+    // Convert the PointCloud2 message to pcl::PointCloud
+    pcl::fromROSMsg(*cloud_msg, *src_cloud_r);
+
+    // Check if the cloud is empty
+    if (src_cloud_r->empty()) {
       return;
     }
+
+    pcl::PointCloud<PointT>::ConstPtr src_cloud = src_cloud_r; // No need for makeShared()
 
     src_cloud = deskewing(src_cloud);
 
@@ -134,6 +141,7 @@ private:
 
     points_pub.publish(*filtered);
   }
+
 
   pcl::PointCloud<PointT>::ConstPtr downsample(const pcl::PointCloud<PointT>::ConstPtr& cloud) const {
     if(!downsample_filter) {

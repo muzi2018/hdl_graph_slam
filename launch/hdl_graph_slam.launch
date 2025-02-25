@@ -11,7 +11,7 @@
   <!-- ***** map -> odom -> base_link -> velodyne ***** -->
   <!-- these can be named in the following -->
   <!-- topic for hdl to find velodyne points -->
-  <arg name="points_topic" default="/velodyne_points" />
+  <arg name="points_topic" default="/D435_head_camera/depth/color/points" />
   <!-- what should the map frame be called -->
   <arg name="map_frame_id" default="map" />
   <!-- what should the base link frame be called -->
